@@ -13,7 +13,7 @@ setup(
     packages=["sofa_zoo"],
     install_requires=[
         "sofa_env",
-        "stable-baselines3",
+        "stable-baselines3==1.8.0",
         "tensorboard",
         "wandb",
         "gitpython",
