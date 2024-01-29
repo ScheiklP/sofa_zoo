@@ -4,7 +4,7 @@ import selectors
 import time
 from typing import Callable, List, Optional, Union
 
-import gym
+import gymnasium as gym
 import numpy as np
 
 from stable_baselines3.common.vec_env.base_vec_env import CloudpickleWrapper, VecEnv, VecEnvObs, VecEnvStepReturn
@@ -29,7 +29,7 @@ class WatchdogVecEnv(SubprocVecEnv):
         crashing the ``VecMonitor`` when accessing the info dict.
 
     Args:
-        env_fns (List[Callable[[], gym.Env]]): List of environment constructors.
+        env_fns (List[Callable[[], gymnasium.Env]]): List of environment constructors.
         step_timeout_sec (Optional[float]): Timeout in seconds for a single step. If a step takes longer than this
             timeout, the environment will be reset. If ``None``, no timeout is used.
         reset_process_on_env_reset (bool): Additionally to hanging envs, close and restart the process of envs at every reset.
@@ -77,10 +77,7 @@ class WatchdogVecEnv(SubprocVecEnv):
             if len(successes) != len(self.remotes):
                 hanging_envs = [i for i, remote in enumerate(self.remotes) if remote not in successes]
                 for i in hanging_envs:
-                    print(
-                        f"Environment {i} is hanging and will be restarted "
-                        f"({datetime.now().strftime('%H:%M:%S')})"
-                    )
+                    print(f"Environment {i} is hanging and will be restarted " f"({datetime.now().strftime('%H:%M:%S')})")
                     # send reset command, which will be processed immediately after step
                     self.remotes[i].send(("reset", None))
 
@@ -92,8 +89,8 @@ class WatchdogVecEnv(SubprocVecEnv):
         # in addition, the observation and done state must be updated
         for i in hanging_envs:
             reset_obs = self.remotes[i].recv()
-            _, reward, _, info = results[i]
-            results[i] = (reset_obs, reward, True, info)
+            _, reward, _, _, info = results[i]
+            results[i] = (reset_obs, reward, True, True, info)
 
         obs, rews, dones, infos = zip(*results)
         obs = list(obs)  # convert to list to allow modification

@@ -13,13 +13,14 @@ setup(
     packages=["sofa_zoo"],
     install_requires=[
         "sofa_env",
-        "stable-baselines3==1.8.0",
+        "stable-baselines3==2.2.1",
         "tensorboard",
         "wandb",
         "gitpython",
         "tqdm",
         "torchvision",
         "pytest",
+        "moviepy",
     ],
     python_requires=">=3.8",
 )

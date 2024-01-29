@@ -1,7 +1,6 @@
 from typing import Callable, Dict, List, Optional, Tuple, Type, Union
 
-import gym
-import gym.spaces
+import gymnasium as gym
 import torch as th
 import numpy as np
 from torch import nn
@@ -18,14 +17,7 @@ class DoubleNatureCNN(BaseFeaturesExtractor):
         super(DoubleNatureCNN, self).__init__(observation_space, 2 * features_dim)
         # We assume CxHxW images (channels first)
         # Re-ordering will be done by pre-preprocessing or wrapper
-        assert is_image_space(observation_space, check_channels=False), (
-            "You should use NatureCNN "
-            f"only with images not with {observation_space}\n"
-            "(you are probably using `CnnPolicy` instead of `MlpPolicy` or `MultiInputPolicy`)\n"
-            "If you are using a custom environment,\n"
-            "please check it using our env checker:\n"
-            "https://stable-baselines3.readthedocs.io/en/master/common/env_checker.html"
-        )
+        assert is_image_space(observation_space, check_channels=False), "You should use NatureCNN " f"only with images not with {observation_space}\n" "(you are probably using `CnnPolicy` instead of `MlpPolicy` or `MultiInputPolicy`)\n" "If you are using a custom environment,\n" "please check it using our env checker:\n" "https://stable-baselines3.readthedocs.io/en/master/common/env_checker.html"
         n_input_channels = observation_space.shape[0]
         self.policy_cnn = nn.Sequential(
             nn.Conv2d(n_input_channels, 32, kernel_size=8, stride=4, padding=0),
@@ -107,7 +99,6 @@ class ActorCriticDoubleNatureCnnPolicy(ActorCriticPolicy):
         *args,
         **kwargs,
     ):
-
         super(ActorCriticDoubleNatureCnnPolicy, self).__init__(
             observation_space=observation_space,
             action_space=action_space,
@@ -194,9 +185,7 @@ class SofaCNN(BaseFeaturesExtractor):
             self.linear = lambda x: x
             self._features_dim = n_flatten
 
-        print(
-            f"Created {layer_i} convolutional layers with a final size of {current_feature_size}x{current_feature_size}x{previous_conv_maps}, flattened to a vector of size {n_flatten}{', passed to a linear layer with output size ' + str(output_features) + '.' if output_features is not None else '.'}"
-        )
+        print(f"Created {layer_i} convolutional layers with a final size of {current_feature_size}x{current_feature_size}x{previous_conv_maps}, flattened to a vector of size {n_flatten}{', passed to a linear layer with output size ' + str(output_features) + '.' if output_features is not None else '.'}")
 
     def forward(self, observations: th.Tensor) -> th.Tensor:
         return self.linear(self.cnn(observations))
@@ -277,9 +266,7 @@ class DoubleSofaCNN(BaseFeaturesExtractor):
             self.critic_linear = lambda x: x
             self._features_dim = n_flatten
 
-        print(
-            f"Created {layer_i} convolutional layers with a final size of {current_feature_size}x{current_feature_size}x{previous_conv_maps}, flattened to a vector of size {n_flatten}{', passed to a linear layer with output size ' + str(output_features) + '.' if output_features is not None else '.'}"
-        )
+        print(f"Created {layer_i} convolutional layers with a final size of {current_feature_size}x{current_feature_size}x{previous_conv_maps}, flattened to a vector of size {n_flatten}{', passed to a linear layer with output size ' + str(output_features) + '.' if output_features is not None else '.'}")
 
     def forward(self, observations: th.Tensor) -> th.Tensor:
         return th.cat((self.policy_linear(self.policy_cnn(observations)), self.critic_linear(self.critic_cnn(observations))), dim=-1)
@@ -290,14 +277,7 @@ class DreamerCnn(BaseFeaturesExtractor):
         super(DreamerCnn, self).__init__(observation_space, 600)
         # We assume CxHxW images (channels first)
         # Re-ordering will be done by pre-preprocessing or wrapper
-        assert is_image_space(observation_space, check_channels=False), (
-            "You should use NatureCNN "
-            f"only with images not with {observation_space}\n"
-            "(you are probably using `CnnPolicy` instead of `MlpPolicy` or `MultiInputPolicy`)\n"
-            "If you are using a custom environment,\n"
-            "please check it using our env checker:\n"
-            "https://stable-baselines3.readthedocs.io/en/master/common/env_checker.html"
-        )
+        assert is_image_space(observation_space, check_channels=False), "You should use NatureCNN " f"only with images not with {observation_space}\n" "(you are probably using `CnnPolicy` instead of `MlpPolicy` or `MultiInputPolicy`)\n" "If you are using a custom environment,\n" "please check it using our env checker:\n" "https://stable-baselines3.readthedocs.io/en/master/common/env_checker.html"
         n_input_channels = observation_space.shape[0]
         self.policy_cnn = nn.Sequential(
             nn.Conv2d(n_input_channels, 32, kernel_size=4, stride=2, padding=0),
@@ -418,7 +398,6 @@ class ActorCriticDreamerCnnPolicy(ActorCriticPolicy):
         *args,
         **kwargs,
     ):
-
         super(ActorCriticDreamerCnnPolicy, self).__init__(
             observation_space=observation_space,
             action_space=action_space,

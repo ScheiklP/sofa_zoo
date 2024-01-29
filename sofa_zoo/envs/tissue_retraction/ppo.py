@@ -1,5 +1,4 @@
-import gym
-import gym.spaces
+import gymnasium as gym
 import numpy as np
 
 from stable_baselines3.common.callbacks import BaseCallback
@@ -41,7 +40,6 @@ class CollisionPunishmentCurriculumCallback(BaseCallback):
 
 
 if __name__ == "__main__":
-
     add_render_callback = True
     image_based = True
     continuous_actions = True
@@ -136,7 +134,11 @@ if __name__ == "__main__":
         normalize_reward=normalize_reward,
     )
 
-    model.learn(total_timesteps=config["total_timesteps"], callback=callback, tb_log_name=f"PPO_{image_based=}_{continuous_actions=}",)
+    model.learn(
+        total_timesteps=config["total_timesteps"],
+        callback=callback,
+        tb_log_name=f"PPO_{image_based=}_{continuous_actions=}",
+    )
 
     log_path = model.logger.dir
     if not isinstance(log_path, str):

@@ -1,8 +1,8 @@
 import numpy as np
 import os
-import gym
-import gym.spaces
-from gym.wrappers import TimeLimit, ResizeObservation
+import gymnasium as gym
+from gymnasium.wrappers.resize_observation import ResizeObservation
+from gymnasium.wrappers.time_limit import TimeLimit
 
 from typing import Callable, Type, Tuple, Optional, Union, List
 from pathlib import Path
@@ -21,7 +21,6 @@ def configure_make_env(env_kwargs: dict, EnvClass: Type[SofaEnv], max_episode_st
     """Returns a make_env function that is configured with given env_kwargs."""
 
     def make_env() -> gym.Env:
-
         add_resize_observation_wrapper = False
         window_size = env_kwargs.pop("window_size", None)
         observation_shape = env_kwargs.pop("image_shape", None)
@@ -29,7 +28,6 @@ def configure_make_env(env_kwargs: dict, EnvClass: Type[SofaEnv], max_episode_st
         user_specified_observation_shape = False if observation_shape is None else True
 
         if env_kwargs.get("render_mode", None) == RenderMode.HUMAN:
-
             if not window_size == observation_shape:
                 assert window_size is not None
                 env_kwargs["image_shape"] = window_size
@@ -47,7 +45,6 @@ def configure_make_env(env_kwargs: dict, EnvClass: Type[SofaEnv], max_episode_st
         # TODO observation_type.name is used, because the enum is created in every env -> direct comparison not
         # possible. Is there a cleaner way?
         if add_resize_observation_wrapper and env.observation_type.name == "RGB" and isinstance(env.observation_space, gym.spaces.Box):
-
             assert observation_shape is not None
             env = ResizeObservation(env, observation_shape)
 
@@ -77,7 +74,6 @@ def configure_learning_pipeline(
     reset_process_on_env_reset: bool = False,
     reward_clip: Optional[float] = None,
 ):
-
     if use_wandb:
         import wandb
 
