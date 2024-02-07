@@ -141,7 +141,7 @@ class WatchdogVecEnv(SubprocVecEnv):
             obs, self.reset_infos = zip(*results)
             # Seeds and options are only used once
             self._reset_seeds()
-            self._reset_options()            
+            self._reset_options()
             return _flatten_obs(obs, self.observation_space)
         else:
             return super().reset()
