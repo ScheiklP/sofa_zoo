@@ -98,9 +98,10 @@ class WatchdogVecEnv(SubprocVecEnv):
             results[i] = (reset_obs, 0.0, True, defaultdict(float), reset_info)
 
         obs, rews, dones, infos, self.reset_infos = zip(*results)
-        obs = list(obs)  # convert to list to allow modification
 
         if self.reset_process_on_env_reset:
+            obs = list(obs)  # convert to list to allow modification
+            self.reset_infos = list(self.reset_infos)  # convert to list to allow modification
             for i, (done, remote, process) in enumerate(zip(dones, self.remotes, self.processes)):
                 if done and i not in hanging_envs:  # do not double-reset environments that were hanging
                     remote.send(("close", None))  # command worker to stop
