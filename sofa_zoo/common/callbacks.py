@@ -62,5 +62,5 @@ class AdjustLoggingWindow(BaseCallback):
 
 class RenderCallback(BaseCallback):
     def _on_step(self) -> bool:
-        self.model._vec_normalize_env.render()
+        self.model._vec_normalize_env.render(mode="human")
         return super()._on_step()
